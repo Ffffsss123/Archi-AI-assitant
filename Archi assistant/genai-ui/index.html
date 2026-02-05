@@ -1,0 +1,766 @@
+﻿<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>GenAI Assistant</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="page">
+    <div class="shell">
+      <!-- === LOGIN VIEW (Default) === -->
+      <div id="login-view" class="view-container">
+        <div class="login-container">
+          <div class="login-brand">
+            <div class="hero-tag">AI for ArchiMate</div>
+            <h1>ArchiMate Assistant</h1>
+            <p>Sign in to access your workspace</p>
+          </div>
+
+          <div class="modal-card inline-card">
+            <div class="auth-tabs">
+              <button class="tab-btn active" data-tab="login">Sign In</button>
+              <button class="tab-btn" data-tab="register">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <div class="auth-form" id="loginForm">
+              <div class="input-group">
+                <label>Account</label>
+                <input
+                  type="email"
+                  id="loginEmail"
+                  placeholder="example@gmail.com"
+                />
+              </div>
+
+              <div class="input-group">
+                <label>Password</label>
+                <input
+                  type="password"
+                  id="loginPassword"
+                  placeholder="Minimum 6 characters"
+                />
+              </div>
+
+              <button class="primary-btn full-width" id="doLoginBtn">
+                Sign In
+              </button>
+            </div>
+
+            <!-- Register Form -->
+            <div class="auth-form" id="registerForm" hidden>
+              <div class="input-group">
+                <label>Email</label>
+                <input
+                  type="email"
+                  id="regEmail"
+                  placeholder="example@gmail.com"
+                />
+              </div>
+
+              <div class="input-group">
+                <label>Password</label>
+                <input
+                  type="password"
+                  id="regPassword"
+                  placeholder="Minimum 8 characters"
+                />
+              </div>
+
+              <div class="input-group">
+                <label>Confirm Password</label>
+                <input
+                  type="password"
+                  id="regConfirm"
+                  placeholder="Confirm password"
+                />
+              </div>
+
+              <button class="primary-btn full-width" id="doRegisterBtn">
+                Sign Up
+              </button>
+            </div>
+
+            <div class="auth-message" id="authMessage" hidden></div>
+
+            <div class="divider">
+              <span>OR</span>
+            </div>
+
+            <button class="google-btn full-width" id="googleLoginBtn">
+              <span class="icon">G</span>
+              Continue with Google
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- === APP VIEW (Hidden until login) === -->
+      <div id="app-view" class="view-container" hidden>
+        <div class="assistant-shell codex-shell" id="assistantApp">
+          <header class="top-bar">
+            <div class="top-actions">
+              <button
+                id="signalsBtn"
+                class="signals-toggle signals-toggle--compact signals-toggle--boost"
+                type="button"
+                aria-expanded="false"
+                aria-controls="signals-panel"
+                title="Workspace signals"
+              >
+                <span class="signals-toggle-icon">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path
+                      d="M4 14l4-4 4 4 6-6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M20 18H4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span class="signals-toggle-label">Workspace</span>
+                <span class="signals-toggle-badge">Signals</span>
+                <span class="signals-toggle-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path
+                      d="M6 9l6 6 6-6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+              </button>
+              <div class="action-group utility-group">
+                <button
+                  id="newChatBtn"
+                  class="action-btn action-icon action-primary"
+                  aria-label="New chat"
+                  title="New chat"
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path
+                      d="M4 20h4l10-10-4-4-10 10v4z"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M13.5 5.5l4 4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+                <button
+                  id="historyBtn"
+                  class="action-btn action-icon"
+                  aria-label="History"
+                  title="History"
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path
+                      d="M12 8v4l3 3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M3.5 12a8.5 8.5 0 1 0 2.5-6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M3 4v4h4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+                <div class="tool-menu-container">
+                  <button
+                    class="action-btn action-icon action-boost lang-btn"
+                    aria-label="Tools"
+                    title="Tools"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <path
+                        d="M12 5v14"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2.6"
+                      />
+                      <path
+                        d="M5 12h14"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2.6"
+                      />
+                    </svg>
+                  </button>
+                  <div class="dropdown-menu" hidden>
+                    <button class="menu-option" id="explainMenuBtn">
+                      <span class="menu-icon" aria-hidden="true">
+                        <svg
+                          viewBox="0 0 24 24"
+                          focusable="false"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M6 5h10a3 3 0 0 1 3 3v10a2 2 0 0 1-2 2H7a3 3 0 0 0-3 3V7a2 2 0 0 1 2-2z"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M8 7h6"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M8 10h6"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </span>
+                      <span class="menu-text">Explain</span>
+                    </button>
+                    <button class="menu-option" id="translateMenuBtn">
+                      <span class="menu-icon" aria-hidden="true">
+                        <svg
+                          viewBox="0 0 24 24"
+                          focusable="false"
+                          aria-hidden="true"
+                        >
+                          <circle cx="12" cy="12" r="9" />
+                          <path
+                            d="M3 12h18"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M12 3c3 3.5 3 14 0 18"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M12 3c-3 3.5-3 14 0 18"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </span>
+                      <span class="menu-text">Translate</span>
+                    </button>
+                    <button class="menu-option" id="diagramMenuBtn">
+                      <span class="menu-icon" aria-hidden="true">
+                        <svg
+                          viewBox="0 0 24 24"
+                          focusable="false"
+                          aria-hidden="true"
+                        >
+                          <circle cx="7" cy="8" r="3" />
+                          <circle cx="17" cy="16" r="3" />
+                          <path
+                            d="M9.4 9.6l5.2 4.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </span>
+                      <span class="menu-text">To-diagram (plantUML)</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="user-menu-container">
+                  <button
+                    class="action-btn action-icon user-btn"
+                    aria-label="Settings"
+                    title="Settings"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <circle cx="12" cy="12" r="3" />
+                      <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c0 .66.26 1.3.73 1.77.47.47 1.11.73 1.77.73H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+                  <div class="user-dropdown" hidden>
+                    <div class="user-dropdown-header">
+                      <div class="user-email" id="userEmailLabel">
+                        user@email.com
+                      </div>
+                      <div class="user-name" id="userNameLabel">User</div>
+                    </div>
+                    <div class="user-dropdown-actions">
+                      <button
+                        id="settingsBtn"
+                        class="menu-option"
+                        type="button"
+                      >
+                        Rename
+                      </button>
+                      <div class="menu-divider"></div>
+                      <div class="menu-label">Theme</div>
+                      <button
+                        class="menu-option theme-option"
+                        data-theme="light"
+                        type="button"
+                        aria-pressed="true"
+                      >
+                        Light
+                      </button>
+                      <button
+                        class="menu-option theme-option"
+                        data-theme="dark"
+                        type="button"
+                        aria-pressed="false"
+                      >
+                        Dark
+                      </button>
+                      <div class="menu-divider"></div>
+                      <button
+                        id="logoutBtn"
+                        class="logout-option"
+                        type="button"
+                      >
+                        Log out
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <section
+            class="signals-drawer"
+            id="signals-drawer"
+            data-collapsed="true"
+          >
+            <div id="signals-panel" class="signals-body" hidden>
+              <section class="inspector">
+                <div class="signal-grid">
+                  <div class="signal">
+                    <div class="signal-title">Active View</div>
+                    <div class="signal-value" id="wsActiveView">None</div>
+                  </div>
+                  <div class="signal">
+                    <div class="signal-title">Objects Selected</div>
+                    <div class="signal-value" id="wsSelectedCount">0 nodes</div>
+                  </div>
+                  <div class="signal" id="checksSignal">
+                    <div class="signal-title">Checks</div>
+                    <div class="signal-meta">
+                      <div class="signal-value" id="wsChecks">All passing</div>
+                      <span
+                        class="signal-link"
+                        id="checksDetailLink"
+                        aria-hidden="true"
+                        >Details</span
+                      >
+                    </div>
+                  </div>
+                  <div class="signal">
+                    <div class="signal-title">Status</div>
+                    <div
+                      class="signal-value ws-status explain-state idle"
+                      id="wsStatus"
+                    >
+                      Idle
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <section class="chat-stage">
+            <div class="chat-card">
+              <!-- Direct Chat Interface -->
+              <div id="chat-panel" class="chat-panel">
+                <div class="chat-header">
+                  <button
+                    id="renameChatBtn"
+                    class="chat-title-btn"
+                    type="button"
+                    aria-label="Rename chat"
+                    title="Click to rename"
+                  >
+                    <span class="chat-title" id="chatTitle">Loading</span>
+                  </button>
+                </div>
+                <div class="chat-scroll">
+                  <div id="chat-history">
+                    <div class="message-row ai loading">
+                      <div class="message ai">
+                        <div class="content loading">Loading</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <footer>
+                  <div class="input-container">
+                    <div class="input-header">
+                      <!-- Mode Selector Removed -->
+                    </div>
+                    <div class="input-body">
+                      <textarea
+                        id="user-input"
+                        rows="1"
+                        placeholder="Describe what you want to model..."
+                      ></textarea>
+                      <button id="send-btn" aria-label="Send">&uarr;</button>
+                    </div>
+                  </div>
+                </footer>
+              </div>
+            </div>
+          </section>
+
+          <!-- History Panel -->
+          <div id="history-panel" class="panel-overlay" hidden>
+            <div class="side-panel">
+              <div class="panel-header">
+                <div class="panel-title">Chat History</div>
+                <button
+                  class="icon-btn close-panel-btn"
+                  data-close="history-panel"
+                  aria-label="Close history"
+                >
+                  <span aria-hidden="true">X</span>
+                </button>
+              </div>
+              <div class="panel-meta">
+                <label class="panel-select">
+                  <span>History storage</span>
+                  <select id="storagePreferenceSelect">
+                    <option value="cloud">Cloud (sync across devices)</option>
+                    <option value="local">Local only</option>
+                  </select>
+                </label>
+              </div>
+              <div
+                id="sessionList"
+                class="session-list"
+                aria-label="Chat history"
+                role="listbox"
+              ></div>
+              <div id="sessionListLoading" class="session-list-status" hidden>
+                Loading...
+              </div>
+              <div id="sessionListEmpty" class="session-list-status" hidden>
+                No history yet.
+              </div>
+            </div>
+          </div>
+
+          <!-- Explain Panel -->
+          <div id="explain-view" class="panel-overlay" hidden>
+            <div class="side-panel side-panel-wide">
+              <div class="panel-header">
+                <div class="panel-title">Explain</div>
+                <button
+                  class="icon-btn close-panel-btn"
+                  data-close="explain-view"
+                  aria-label="Close explain"
+                >
+                  <span aria-hidden="true">X</span>
+                </button>
+              </div>
+              <div class="explain-shell">
+                <section class="explain-card explain-header">
+                  <div>
+                    <p class="explain-subtitle">
+                      Auto-explains the current view or selection for
+                      non-technical stakeholders.
+                    </p>
+                  </div>
+                  <label class="explain-select">
+                    <span>Language</span>
+                    <select id="explainLanguageSelect">
+                      <option value="en" selected>English</option>
+                      <option value="zh-CN">Chinese (Simplified)</option>
+                      <option value="zh-TW">Chinese (Traditional)</option>
+                      <option value="ja">Japanese</option>
+                      <option value="fr">French</option>
+                      <option value="de">German</option>
+                      <option value="es">Spanish</option>
+                    </select>
+                  </label>
+                </section>
+
+                <section class="explain-grid">
+                  <div class="explain-card">
+                    <div class="explain-label">Context</div>
+                    <div id="explainContextLine" class="explain-value">
+                      Waiting for active view
+                    </div>
+                  </div>
+                  <div class="explain-card">
+                    <div class="explain-label">State</div>
+                    <div
+                      id="explainStateLine"
+                      class="explain-value explain-state idle"
+                    >
+                      Idle
+                    </div>
+                  </div>
+                </section>
+
+                <section class="explain-card explain-summary">
+                  <div class="explain-summary-top">
+                    <div class="explain-label">Summary</div>
+                    <button
+                      id="copyExplainSummary"
+                      class="icon-btn icon-btn--ghost"
+                      type="button"
+                      aria-label="Copy summary"
+                      title="Copy summary"
+                    >
+                      <svg
+                        class="copy-icon"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                        focusable="false"
+                      >
+                        <rect x="9" y="9" width="10" height="10" rx="2"></rect>
+                        <path
+                          d="M5 15V5a2 2 0 0 1 2-2h10"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        ></path>
+                      </svg>
+                    </button>
+                  </div>
+                  <div id="explainSummaryText" class="explain-summary-text">
+                    No summary yet.
+                  </div>
+                </section>
+
+                <section class="explain-card explain-panel">
+                  <div class="explain-panel-head">
+                    <div class="nav-group explain-toggle">
+                      <button
+                        class="nav-btn active"
+                        data-explain-mode="simplified"
+                      >
+                        Detailed
+                      </button>
+                      <button class="nav-btn" data-explain-mode="detailed">
+                        Divergent
+                      </button>
+                    </div>
+                    <button
+                      id="copyExplainCurrent"
+                      class="icon-btn icon-btn--ghost"
+                      type="button"
+                      aria-label="Copy explanation"
+                      title="Copy explanation"
+                    >
+                      <svg
+                        class="copy-icon"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                        focusable="false"
+                      >
+                        <rect x="9" y="9" width="10" height="10" rx="2"></rect>
+                        <path
+                          d="M5 15V5a2 2 0 0 1 2-2h10"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        ></path>
+                      </svg>
+                    </button>
+                  </div>
+                  <div id="explainPanelBody" class="explain-body">
+                    Waiting for explanation.
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- === Language Selection Modal === -->
+    <div id="language-modal" class="modal-overlay" hidden>
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Translate</h3>
+          <button class="close-modal-btn" aria-label="Close">X</button>
+        </div>
+        <div class="modal-body">
+          <p>Choose a translation action.</p>
+          <div class="translate-actions">
+            <div class="translate-title">Translate actions</div>
+            <button class="secondary-btn translate-action" id="translateAllBtn">
+              Translate all views
+            </button>
+            <button
+              class="secondary-btn translate-action"
+              id="translateCurrentBtn"
+            >
+              Translate current view
+            </button>
+            <button
+              class="secondary-btn translate-action"
+              id="undoTranslateBtn"
+            >
+              Undo translation
+            </button>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="secondary-btn" id="closeLangBtn">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- === Settings Modal === -->
+    <div id="user-name-modal" class="modal-overlay" hidden>
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Settings</h3>
+          <button class="close-modal-btn" aria-label="Close">X</button>
+        </div>
+        <div class="modal-body">
+          <p>Update your profile.</p>
+          <div class="input-group">
+            <label for="displayNameInput">Display name</label>
+            <input
+              type="text"
+              id="displayNameInput"
+              maxlength="32"
+              placeholder="Defaults to email prefix"
+            />
+          </div>
+          <div class="modal-hint" id="displayNameHint">Default: User</div>
+          <div
+            class="auth-message modal-message"
+            id="displayNameMessage"
+            hidden
+          ></div>
+        </div>
+        <div class="modal-actions">
+          <button class="secondary-btn" id="skipNameBtn">Cancel</button>
+          <button class="primary-btn" id="saveNameBtn">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- === Rename Chat Modal === -->
+    <div id="rename-modal" class="modal-overlay" hidden>
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Rename chat</h3>
+          <button
+            class="close-modal-btn"
+            id="renameChatCloseBtn"
+            aria-label="Close"
+          >
+            X
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Give this chat a clear title.</p>
+          <div class="input-group">
+            <label for="renameChatInput">Title</label>
+            <input
+              type="text"
+              id="renameChatInput"
+              maxlength="64"
+              placeholder="New chat title"
+            />
+          </div>
+          <div
+            class="auth-message modal-message"
+            id="renameChatMessage"
+            hidden
+          ></div>
+        </div>
+        <div class="modal-actions">
+          <button class="secondary-btn" id="renameChatCancelBtn">Cancel</button>
+          <button class="primary-btn" id="renameChatSaveBtn">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- === Delete Chat Modal === -->
+    <div id="delete-modal" class="modal-overlay" hidden>
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Delete chat</h3>
+          <button
+            class="close-modal-btn"
+            id="deleteChatCloseBtn"
+            aria-label="Close"
+          >
+            X
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>This will permanently remove the chat and its messages.</p>
+          <div
+            class="auth-message modal-message"
+            id="deleteChatMessage"
+            hidden
+          ></div>
+        </div>
+        <div class="modal-actions">
+          <button class="secondary-btn" id="deleteChatCancelBtn">Cancel</button>
+          <button class="primary-btn" id="deleteChatConfirmBtn">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- === Checks Details Modal === -->
+    <div id="checks-detail-modal" class="modal-overlay" hidden>
+      <div class="modal-card checks-detail-card">
+        <div class="modal-header">
+          <h3>Validation Details</h3>
+          <button
+            class="close-modal-btn"
+            aria-label="Close"
+            id="closeChecksDetailBtn"
+          >
+            X
+          </button>
+        </div>
+        <div class="modal-body checks-detail-body" id="checksDetailContent">
+          <p>No issues found.</p>
+        </div>
+        <div class="modal-actions">
+          <button class="secondary-btn" id="closeChecksDetailBtn2">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/core/utils.js"></script>
+    <script src="js/ui/theme.js"></script>
+    <script src="js/auth/auth.js"></script>
+    <script src="js/features/explain.js"></script>
+    <script src="js/features/signals.js"></script>
+    <script src="js/sessions/history.js"></script>
+    <script src="js/chat/chat.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

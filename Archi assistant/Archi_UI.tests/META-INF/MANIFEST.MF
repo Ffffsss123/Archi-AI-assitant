@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Archi_UI Tests
+Bundle-SymbolicName: Archi_UI.tests;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Require-Bundle: org.junit,
+ org.eclipse.core.runtime,
+ Archi_UI
